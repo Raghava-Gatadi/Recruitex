@@ -7,4 +7,4 @@
 
 ## Images of this website
 ### Home Page
-![Home page 1](Recruitex/website_images/contact_us.png)
+![home page 1](Recruitex/website_images/home_page_1.png)
