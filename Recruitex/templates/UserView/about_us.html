@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .dropdown {
+           position: relative;
+           display: inline-block;
+         }
+         
+         .dropdown-content {
+           display: none;
+           position: absolute;
+           background-color: #f9f9f9;
+           min-width: 160px;
+           box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+           padding: 12px 16px;
+           z-index: 1;
+           right:1rem;
+           
+         }
+         
+         .dropdown:hover .dropdown-content {
+           display: block;
+         }
+     </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>About Us</title>
+</head>
+<body>
+    <nav class="flex z-10 justify-between w-full h-20 items-center m-auto bg-transparent max-md:bg-gray-100">
+        <div class="w-56 pl-4 ml-4 min-w-xs">
+           <a href="{% url 'home-page' %}" ><img src="{% static 'images/logo.png' %}" alt="Company logo"/></a>
+        </div>
+        <div class="max-sm:flex-col max-sm:hidden justify-between xl:gap-6 md:gap-3 max-md:absolute  max-md:border max-md:left-0 max-md:text-lg xl:text-lg items-center md:flex w-full pl-20 max-md:font-semibold max-md:pt-4  md:w-auto md:p-0 md:mt-0 md:mr-0" id="items">
+         <a class="{% block jobs %} {% endblock jobs %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl -mr-4" href="{% url 'jobs_list' %}">Jobs</a><br>
+         <a class="{% block profiles %} {% endblock profiles %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'profiles-list' %}">Profiles</a>
+         <a class="{% block messages %} {% endblock messages %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href=""><p>Messages</p></a>
+         {% if not user.is_authenticated %}
+         <a class="{% block signup %} {% endblock signup %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'signup' %}" >SignUp</a>
+         <a class="{% block login %} {% endblock login %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'login' %}" >Login</a>
+         {% endif %}
+         <div class=" pr-4 relative dropdown">
+            <img class='h-[60px] w-[60px] rounded-full border border-black p-[0.15rem]' src="/media/{{user.profile_photo}}" alt="profile logo"/>
+            <div class="dropdown-content text-sm max-sm:px-8 max-sm:pl-20 w-fit">
+               {% if user.is_authenticated %}
+               <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'profile-page' user.slug %}"><div>Myprofile</div></a><hr class="my-1">
+               {% endif %}
+               <a class='hover:font-semibold hover:text-[1rem] duration-300' href=""><div>Help</div></a><hr class="my-1">
+               <a class='hover:font-semibold hover:text-[1rem] duration-300' href=""><div>settings and Privacy</div></a><hr class="mb-1">
+               {% if user.is_authenticated %}
+               <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'password_change' %}"><div>Change Password</div></a><hr class="my-1">
+               <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'logout' %}"><div>Logout</div></a>{% endif %}
+            </div>
+         </div>
+      </div>
+        <span class="text-3xl font-bold md:hidden mx-4 cursor-pointer"><ion-icon name="menu" onclick="Menu(this)"></ion-icon></span>
+     </nav>
+     <div>
+        <img class="absolute -z-50 top-0" src="{% static 'images/about-us.png' %}" alt="">
+     </div>
+     <div class="bg-yellow-100 px-4 py-2 absolute top-[20px] left-[35%] {% if messages %}visible {% else %}hidden{% endif %}">
+      {% for msg in messages %}
+         {{msg}}
+      {% endfor %}
+   </div class="font-sans m-auto max-w-screen-2xl border-2 border-gray-50 transition-all ease-in duration-300">
+     <div class="mt-[885px] w-100vw text-center">
+        <h2 class="text-4xl font-medium text-orange-500">About Us</h2>
+        <p class="px-96 mt-4">Welcome to our job recruiting platform! We are a team of dedicated professionals who are passionate about connecting job seekers with the right employers.</p>
+        <p class="px-72 mt-3">Our platform was born out of a desire to simplify the job search process and provide a seamless experience for both job seekers and employers. We understand that looking for a job can be a daunting task, and that's why we've created a platform that makes it easy for you to find your dream job.</p>
+        <h2 class="text-4xl font-medium text-orange-500 mt-6">Vision</h2>
+        <p class="px-72 mt-4">Our vision is to revolutionize the job search process by creating a platform that empowers job seekers and employers alike. We believe that everyone should have the opportunity to find their dream job, and we are committed to making that a reality.</p>
+        <h2 class="text-4xl font-medium text-orange-500 mt-6">Mission</h2>
+        <p class="px-72 mt-4">Our mission is to empower job seekers and employers by providing a user-friendly and efficient platform that streamlines the job search process. We aim to connect job seekers with the right employers and vice versa, making the hiring process smoother and more effective.</p>
+    </div>
+    <footer class="flex-col mx-16">
+      <div class="flex justify-around h-40 bg-[#cad3cb] items-center max-sm:h-28 max-md:h-32">
+         <p class="text-4xl max-lg:text-3xl max-md:text-xl max-sm:text-base max-sm:font-medium">
+            Subsribe Newsletters
+         </p>
+         <form class="bg-white flex items-center h-14 max-lg:h-10" action="{% url 'subscribe' %}" method = 'POST'>
+            {% csrf_token %}
+            <input class="w-80 pl-3 h-14 border-none text-base mr-4 outline-none max-lg:w-44 max-lg:h-10 max-md:w-32 max-sm:w-24" name='email' id ='email' placeholder="Enter your email" type="text"/>
+            <button class="text-white text-lg bg-black py-2 px-4 mr-2 cursor-pointer max-lg:text-base max-lg:mr-0 max-lg:py-1 max-sm:text-sm" type="submit">
+               Subscribe Now
+            </button>
+         </form>
+      </div>
+      <div class="flex justify-between items-center py-8 px-4 gap-20">
+         <div class="flex text-base justify-start gap-5 text-gray-700 max-md:flex-col max-md:gap-2 max-md:ml-10 max-lg:text-sm xl:font-semibold max-lg:gap-2">
+            <a href={% url 'about_us' %}><p>About us</p></a>
+            <a href="{% url 'terms_conditions' %}"><p>Terms and Conditions</p></a>
+            <a href=""><p>User Example</p></a>
+            <a href=""><p>Job Recruter's acc</p></a>
+            <a href=""><p>Resources</p></a>
+            <a href={% url 'contact_us' %}><p>Contact Us</p></a>
+         </div>
+         <div class="flex justify-end gap-5 max-md:flex-col max-md:gap-1 max-md:mr-10 max-lg:text-base text-xl">
+            <a class="social-icons" href="https://facebook.com"><i class="fa-brands fa-2x fa-square-facebook"></i></a>
+            <a class="social-icons" href="https://twitter.com"><i class="fa-brands fa-2x fa-twitter"></i></a>
+            <a class="social-icons" href="https://instagram.com"><i class="fa-brands fa-2x fa-instagram"></i></a>
+            <a class="social-icons" href="https://youtube.com"><i class="fa-brands fa-2x fa-youtube"></i></a>
+         </div>
+      </div>
+      <hr class="text-gray-500" />
+      <div class="flex justify-start gap-6 pl-4 pt-2 font-extralight">
+         <a href=""><p>Terms Of Use</p></a>
+         <a href=""><p>Privacy Policy</p></a>
+      </div>
+   </footer>
+</body>
+</html>

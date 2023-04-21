@@ -1,0 +1,135 @@
+{% load static %} {% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+      <title>{% block title %}{% endblock title %}</title>
+      <title>Home</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      {% block links %}{% endblock links %} {% tailwind_css %}
+      <link rel="stylesheet" href="{% static 'css/dist/base.css' %}">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <style>
+         *:focus{
+            outline: none;
+            outline-width: 0;
+         }
+         .dropdown {
+            position: relative;
+            display: inline-block;
+          }
+          
+          .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            padding: 12px 16px;
+            z-index: 1;
+            right:1rem;
+            
+          }
+          
+          .dropdown:hover .dropdown-content {
+            display: block;
+          }
+          {% block styles %}{% endblock styles %}
+      </style>
+   </head>
+   <body class="font-body m-auto max-w-screen-2xl border-2 border-gray-50 transition-all ease-in duration-300">
+      <header>
+         <nav class="flex justify-between w-full h-20 items-center m-auto bg-[#fbfbfb] max-md:bg-gray-100 ">
+            <div class="w-56 pl-4 min-w-xs ml-4">
+               <a href="{% url 'home-page' %}" ><img src="{% static 'images/logo.png' %}" style='hbox-shadow:0 0 5px #aaa' class="hover:scale-[1.1] duration-300" alt="Company logo"/></a>
+            </div>
+            <div class="max-sm:flex-col max-sm:hidden justify-between xl:gap-6 md:gap-3 max-md:absolute max-md:bg-white max-md:border max-md:left-0 max-md:text-lg xl:text-lg items-center md:flex w-full pl-20 max-md:font-semibold max-md:pt-4 bg-gray-50 md:w-auto md:p-0 md:mt-0 md:mr-0" id="items">
+               <a class="{% block jobs %} {% endblock jobs %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl -mr-4" href="{% url 'jobs_list' %}">Jobs</a><br>
+               <a class="{% block profiles %} {% endblock profiles %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'profiles-list' %}">Profiles</a>
+               <a class="{% block messages %} {% endblock messages %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href=""><p>Messages</p></a>
+               {% if not user.is_authenticated %}
+               <a class="{% block signup %} {% endblock signup %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'signup' %}" >SignUp</a>
+               <a class="{% block login %} {% endblock login %} hover:scale-[1.03] hover:font-medium duration-300 hover:text-green-700 hover:text-2xl" href="{% url 'login' %}" >Login</a>
+               {% endif %}
+               <div class=" pr-4 relative dropdown">
+                  <img class='h-[60px] w-[60px] rounded-full border border-black p-[0.15rem]' src="/media/{{user.profile_photo}}" alt="profile logo"/>
+                  <div class="dropdown-content text-sm max-sm:px-8 max-sm:pl-20 w-fit">
+                     {% if user.is_authenticated %}
+                     <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'profile-page' user.slug %}"><div>Myprofile</div></a><hr class="my-1">
+                     {% endif %}
+                     <a class='hover:font-semibold hover:text-[1rem] duration-300' href=""><div>Help</div></a><hr class="my-1">
+                     <a class='hover:font-semibold hover:text-[1rem] duration-300' href=""><div>settings and Privacy</div></a><hr class="mb-1">
+                     {% if user.is_authenticated %}
+                     <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'password_change' %}"><div>Change Password</div></a><hr class="my-1">
+                     <a class='hover:font-semibold hover:text-[1rem] duration-300' href="{% url 'logout' %}"><div>Logout</div></a>{% endif %}
+                  </div>
+               </div>
+            </div>
+            <span class="sm:hidden text-4xl pr-2"><ion-icon name="menu" onclick="Menu(this)"></ion-icon></span>
+         </nav>
+      </header>
+      <div class="bg-green-200 px-4 py-2 absolute top-[20px] left-[25%] {% if messages %}visible {% else %}hidden{% endif %}">
+         {% for msg in messages %}
+            {{msg}}
+         {% endfor %}
+      </div>
+      <div class="text-center font-body" id="main">
+         {% block content %} {% endblock content %}
+      </div>
+      <footer class="flex-col mx-16">
+         <div class="flex justify-around h-40 bg-[#cad3cb] items-center max-sm:h-28 max-md:h-32">
+            <p class="text-4xl max-lg:text-3xl max-md:text-xl max-sm:text-base max-sm:font-medium">
+               Subsribe Newsletters
+            </p>
+            <form class="bg-white flex items-center h-14 max-lg:h-10" action="{% url 'subscribe' %}" method = 'POST'>
+               {% csrf_token %}
+               <input class="w-80 pl-3 h-14 border-none text-base mr-4 outline-none max-lg:w-44 max-lg:h-10 max-md:w-32 max-sm:w-24" name='email' id ='email' placeholder="Enter your email" type="text"/>
+               <button class="text-white text-lg bg-black py-2 px-4 mr-2 cursor-pointer max-lg:text-base max-lg:mr-0 max-lg:py-1 max-sm:text-sm" type="submit">
+                  Subscribe Now
+               </button>
+            </form>
+         </div>
+         <div class="flex justify-between items-center py-8 px-4 gap-20">
+            <div class="flex flex-wrap text-base justify-start gap-5 text-gray-700 max-md:flex-col max-md:gap-2 max-md:ml-10 max-lg:text-sm xl:font-semibold max-lg:gap-2">
+               <a href={% url 'about_us' %}><p>About us</p></a>
+               <a href="{% url 'terms_conditions' %}"><p>Terms and Conditions</p></a>
+               <a href=""><p>User Example</p></a>
+               <a href=""><p>Job Recruter's acc</p></a>
+               <a href=""><p>Resources</p></a>
+               <a href={% url 'contact_us' %}><p>Contact Us</p></a>
+            </div>
+            <div class="flex justify-end gap-5 max-md:flex-col max-md:gap-1 max-md:mr-10 max-lg:text-base text-xl">
+               <a class="social-icons" href="https://facebook.com"><i class="fa-brands fa-2x fa-square-facebook"></i></a>
+               <a class="social-icons" href="https://twitter.com"><i class="fa-brands fa-2x fa-twitter"></i></a>
+               <a class="social-icons" href="https://instagram.com"><i class="fa-brands fa-2x fa-instagram"></i></a>
+               <a class="social-icons" href="https://youtube.com"><i class="fa-brands fa-2x fa-youtube"></i></a>
+            </div>
+         </div>
+         <hr class="text-gray-500" />
+         <div class="flex justify-start gap-6 pl-4 pt-2 font-extralight">
+            <a href=""><p>Terms Of Use</p></a>
+            <a href=""><p>Privacy Policy</p></a>
+         </div>
+      </footer>
+      <script>
+         function Menu(e) {
+            let list = document.querySelector("#items");
+            let main = document.querySelector("#main");
+            e.name === "menu"
+               ? ((e.name = "close"),
+                 list.classList.add(["top-[80px]"]),
+                 list.classList.remove(["max-md:opacity-0"]),
+                 list.classList.remove(["max-md:hidden"]),
+                 main.classList.add(["mt-48"]))
+               : ((e.name = "menu"),
+                 list.classList.remove(["top-[80px]"]),
+                 list.classList.add(["max-md:opacity-0"]),
+                 main.classList.remove(["mt-48"]));
+         }
+      </script>
+   </body>
+</html>
