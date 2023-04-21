@@ -7,4 +7,19 @@
 
 ## Images of this website
 ### Home Page
-![home page 1](Recruitex/website_images/home_page_1.png)
+![home page 1](website_images/home_1.png)
+![home page 1](website_images/home_2.png)
+
+### Jobs search page
+![home page 1](website_images/job_search.png)
+
+### profile search page
+![home page 1](website_images/profiles_search_page.png)
+
+### user profile page
+![home page 1](website_images/profile_page_1.png)
+![home page 1](website_images/profile_page_2.png)
+![home page 1](website_images/profile_page_3.png)
+
+### contact us page
+![home page 1](website_images/contact_us.png)
